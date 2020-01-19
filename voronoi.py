@@ -86,7 +86,7 @@ def voronoi(pins,bnd):
                         if (np.round(np.dot(Atmp,np.array([output.item(0,0),output.item(1,0)])),7)<=np.round(btmp.transpose(),7)).all():
                            if [output.item(0,0),output.item(1,0)] not in cells[j]:
                                 cells[j].append([output.item(0,0),output.item(1,0)])
-            cells[j] = np.asarray(cells[j])
+#            cells[j] = np.asarray(cells[j])
         cells = np.asarray(cells)
 
 
