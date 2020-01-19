@@ -25,7 +25,6 @@ def plot_voronoi(seeds,centroids):
     ax.view_init(elev=90, azim=-90)
     plt.show()
 
-
 def calc_centroids(regions):
     centroids = []
     for region in regions:
@@ -46,7 +45,7 @@ def init_phi(X, Y, centers, heights, sigmas):
     return phi
 
 # boundary points, initial seed points
-bnd = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
+bnd = np.array([[0, 0], [0, 2], [3, 4], [5, 1]])
 iseeds = np.array([[0.4, 0.5], [0.5, 0.4], [0.6, 0.6]])
 
 # parameter setup
@@ -64,14 +63,5 @@ init_phi(X,Y,iseeds,heights,sigmas)
 seeds,cells = voronoi(iseeds,bnd)
 centroids = calc_centroids(cells)
 
-# Perform LLoyd algorithm
-while not np.array_equal(iseeds,centroids):
-
-    print(cells)
-    # plot the result...
-    plot_voronoi(seeds,centroids)
-
-    # next iteration
-    seeds = centroids
-    seeds,cells = voronoi(seeds,bnd)
-    centroids = calc_centroids(cells)
+# plot the result...
+plot_voronoi(seeds,centroids)
