@@ -47,7 +47,7 @@ def init_phi(X, Y, centers, heights, sigmas):
 
 # boundary points, initial seed points
 bnd = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-iseeds = np.array([[0.4, 0.5], [0.5, 0.4], [0.6, 0.6]])
+seeds = np.array([[0.1, 0.6], [0.4, 0.5], [0.8, 0.6]])
 
 # parameter setup
 heights = np.array([1, 2, 3])
@@ -58,20 +58,25 @@ x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),10)
 y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),10)
 X, Y = np.meshgrid(x_range,y_range)
 
-init_phi(X,Y,iseeds,heights,sigmas)
+init_phi(X,Y,seeds,heights,sigmas)
 
 # first iteration
-seeds,cells = voronoi(iseeds,bnd)
+cells = voronoi(seeds,bnd)
 centroids = calc_centroids(cells)
 
-# Perform LLoyd algorithm
-while not np.array_equal(iseeds,centroids):
+i=0
 
-    print(cells)
+# Perform LLoyd algorithm
+while (not np.array_equal(seeds,centroids) and i<=9):
+
+    i+=1
+    print(i)
+
     # plot the result...
     plot_voronoi(seeds,centroids)
 
     # next iteration
+
     seeds = centroids
-    seeds,cells = voronoi(seeds,bnd)
+    cells = voronoi(seeds,bnd)
     centroids = calc_centroids(cells)
