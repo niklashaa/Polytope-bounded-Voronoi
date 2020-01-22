@@ -1,7 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from math import sqrt
+from math import pi
 from mpl_toolkits import mplot3d
 from scipy.spatial import ConvexHull
-import matplotlib.pyplot as plt
 from voronoi import voronoi 
 
 def poly_area(polytope):
@@ -15,19 +17,21 @@ def poly_areas(polytopes):
         areas.append(poly_area(poly))
     return np.asarray(areas)
 
-def plot_voronoi(seeds,centroids):
+def gauss_heights(areas,heighPar):
+    return heighPar*(areas/np.mean(areas)-1)
+
+def plot_voronoi(cells, seeds,centroids):
     ax = plt.axes(projection='3d')
     ax.plot(seeds[:,0],seeds[:,1],'o')
     ax.plot(centroids[:,0],centroids[:,1],'o')
 
     for cell in cells:
         if len(cell) >= 3:
-            vorhull = ConvexHull(cell)		
-    #        plt.plot(cell[:,0],cell[:,1],'x')
-            for simplex in vorhull.simplices:
+            hull = ConvexHull(cell)		
+            for simplex in hull.simplices:
                 ax.plot(cell[simplex, 0],cell[simplex,1],'k-')
 
-    #ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis', edgecolor='none', alpha=0.1)
+    ax.plot_surface(X, Y, phi, cmap='viridis', edgecolor='none', alpha=0.6)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
@@ -44,46 +48,56 @@ def calc_centroids(regions):
         centroids.append([sum_x/length, sum_y/length])
     return np.array(centroids)
 
-def init_phi(X, Y, centers, heights, sigmas):
+def init_phi(X, Y, centers, heights, sigma):
     phi = np.ones((X.shape[0],X.shape[0]))
     for i, center in enumerate(centers):
-        gau = heights[i]*np.exp((-((Y-center[1])**2/2)-((X-center[0])**2/2))/sigmas[i])
+        gau = heights[i]*np.exp((-((Y-center[1])**2/2)-((X-center[0])**2/2))/sigma)
         phi += gau
     return phi
+
+# parameter setup
+heighPar = 1
+sigPar = 1
 
 # boundary points, initial seed points
 bnd = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
 seeds = np.array([[0.1, 0.1], [0.42, 0.53], [0.8, 0.3]])
 
-# parameter setup
-heights = np.array([1, 2, 3])
-sigmas = np.array([10, 20, 30])
+# constants
+mean_area = poly_area(bnd)/len(seeds)
+sigma = sigPar/2*sqrt(mean_area/pi)
 
 # build meshgrid with extreme points of boundary
-x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),10)
-y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),10)
+x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),100)
+y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),100)
 X, Y = np.meshgrid(x_range,y_range)
-
-init_phi(X,Y,seeds,heights,sigmas)
 
 # first iteration
 cells = voronoi(seeds,bnd)
 centroids = calc_centroids(cells)
 
-i=0
+# initialize gauss functions
+areas = poly_areas(cells)
+heights = gauss_heights(areas, heighPar)
+phi = init_phi(X, Y, seeds, heights, sigma)
 
+i=0
 # Perform LLoyd algorithm
-while (not np.array_equal(seeds,centroids) and i<=9):
+while (not np.array_equal(seeds,centroids) and i<=5):
 
     i+=1
     print(i)
 
     # plot the result...
-    plot_voronoi(seeds,centroids)
+    plot_voronoi(cells, seeds,centroids)
 
     # next iteration
-
     seeds = centroids
     cells = voronoi(seeds,bnd)
     areas = poly_areas(cells)
     centroids = calc_centroids(cells)
+
+    # initialize gauss functions
+    areas = poly_areas(cells)
+    heights = gauss_heights(areas, heighPar)
+    phi = init_phi(X, Y, seeds, heights, sigma)
