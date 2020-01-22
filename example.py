@@ -47,7 +47,7 @@ def init_phi(X, Y, centers, heights, sigmas):
 
 # boundary points, initial seed points
 bnd = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-seeds = np.array([[0.1, 0.6], [0.4, 0.5], [0.8, 0.6]])
+seeds = np.array([[0.1, 0.1], [0.42, 0.53], [0.8, 0.3]])
 
 # parameter setup
 heights = np.array([1, 2, 3])

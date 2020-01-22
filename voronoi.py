@@ -9,7 +9,6 @@ from scipy.spatial import ConvexHull
 
 from interLine import interLine
 from perpBisector2d import perpBisector2d
-from inHull import inHull
 
 """
 Input:
@@ -17,7 +16,6 @@ Input:
     bnd: Boundary
 
 Output:
-    seeds: Voronoi seed points
     cells: Voronoi polygons
 """
 
