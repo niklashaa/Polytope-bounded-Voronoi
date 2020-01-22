@@ -3,7 +3,6 @@
 import numpy as np
 import random, itertools, collections
 
-
 from scipy.spatial import Delaunay
 from scipy.spatial import ConvexHull
 
@@ -28,21 +27,19 @@ def voronoi(seeds,bnd):
     # Delaunay triangulation
     tri = Delaunay(seeds)
 
-    # find voronoi neighbors for each generater point
-    neibs = [ [] for row in seeds]
+    # find  neighbor indices for each seed point
+    neib_inices = [ [] for seed in seeds]
     # iterate over seeds
-    for j, obj in enumerate(seeds):
-        neibs[j]=[]
-        i = 0
+    for j, seed in enumerate(seeds):
+        neib_inices[j]=[]
         # check if simplice contains seed
-        for row in tri.simplices:
-            i = i + 1
-            tmp = np.intersect1d(tri.simplices[i-1],[j])
-            if tmp.size !=0:
+        for simplex in tri.simplices:
+            intersect = np.intersect1d(simplex,j)
+            if intersect.size > 0:
                 # add points of simplice that are not the seed
-                neibs[j].append(np.setdiff1d(tri.simplices[i-1],j))
+                neib_inices[j].append(np.setdiff1d(simplex,j))
         # get rid of duplicates
-        neibs[j] = np.unique(neibs[j])
+        neib_inices[j] = np.unique(neib_inices[j])
 
     # linear equations for the boundary
     bndhull = ConvexHull(bnd)
@@ -55,19 +52,19 @@ def voronoi(seeds,bnd):
     mylistA = [] # Contains vectors between seeds to their neighbours
     mylistb = [] # Contains dot products of vectors in listA to centre between seeds
 
-    for i, obj in enumerate(seeds):
+    for i, seed in enumerate(seeds):
         A = []
         b = []
-        for j in range(0,len(neibs[i])):
-            Altmp, bltmp = perpBisector2d(seeds[i],seeds[neibs[i][j]])
+        for ind in neib_inices[i]:
+            Altmp, bltmp = perpBisector2d(seed,seeds[ind])
             A.append(Altmp)
             b.append(bltmp)
         mylistA.append(np.matrix(A))
         mylistb.append(np.matrix(b))
 
     # obtain voronoi vertices
-    cells = [ [] for row in seeds]
-    for j in range(0,len(mylistA)):
+    cells = [ [] for seed in seeds]
+    for j in range(len(mylistA)):
         Atmp = np.concatenate((mylistA[j],Abnd))
         btmp = np.concatenate((mylistb[j].transpose(),-bbnd))
         combinations = itertools.combinations(range(Atmp.shape[0]),2)

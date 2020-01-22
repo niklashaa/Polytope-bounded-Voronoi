@@ -4,24 +4,33 @@ from scipy.spatial import ConvexHull
 import matplotlib.pyplot as plt
 from voronoi import voronoi 
 
+def poly_area(polytope):
+    x = polytope[:,0]
+    y = polytope[:,1]
+    return 0.5*np.abs(np.dot(x,np.roll(y,1))-np.dot(y,np.roll(x,1)))
+
+def poly_areas(polytopes):
+    areas = []
+    for poly in polytopes:
+        areas.append(poly_area(poly))
+    return np.asarray(areas)
 
 def plot_voronoi(seeds,centroids):
     ax = plt.axes(projection='3d')
     ax.plot(seeds[:,0],seeds[:,1],'o')
     ax.plot(centroids[:,0],centroids[:,1],'o')
 
-    for i, obj in enumerate(seeds):
-        seedsv =  np.array(cells[i])
-        if len(seedsv) >= 3:
-            vorhull = ConvexHull(seedsv)		
-    #        plt.plot(seedsv[i][:,0],seedsv[i][:,1],'x')
+    for cell in cells:
+        if len(cell) >= 3:
+            vorhull = ConvexHull(cell)		
+    #        plt.plot(cell[:,0],cell[:,1],'x')
             for simplex in vorhull.simplices:
-                ax.plot(seedsv[simplex, 0],seedsv[simplex,1],'k-')
+                ax.plot(cell[simplex, 0],cell[simplex,1],'k-')
 
     #ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis', edgecolor='none', alpha=0.1)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
-    ax.set_zlabel('z');
+    ax.set_zlabel('z')
     ax.view_init(elev=90, azim=-90)
     plt.show()
 
@@ -36,12 +45,9 @@ def calc_centroids(regions):
     return np.array(centroids)
 
 def init_phi(X, Y, centers, heights, sigmas):
-    x_centers = centers[:,0]
-    y_centers = centers[:,1]
-
     phi = np.ones((X.shape[0],X.shape[0]))
-    for i, obj in enumerate(centers):
-        gau = heights[i]*np.exp((-((Y-y_centers[i])**2/2)-((X-x_centers[i])**2/2))/sigmas[i])
+    for i, center in enumerate(centers):
+        gau = heights[i]*np.exp((-((Y-center[1])**2/2)-((X-center[0])**2/2))/sigmas[i])
         phi += gau
     return phi
 
@@ -79,4 +85,5 @@ while (not np.array_equal(seeds,centroids) and i<=9):
 
     seeds = centroids
     cells = voronoi(seeds,bnd)
+    areas = poly_areas(cells)
     centroids = calc_centroids(cells)
