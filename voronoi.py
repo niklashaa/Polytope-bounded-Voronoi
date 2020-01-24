@@ -3,6 +3,8 @@
 import numpy as np
 import random, itertools, collections
 
+from math import atan2
+from math import degrees
 from scipy.spatial import Delaunay
 from scipy.spatial import ConvexHull
 
@@ -17,8 +19,6 @@ Input:
 Output:
     cells: Voronoi polygons
 """
-
-
 def voronoi(seeds,bnd):
 
     if all(x == seeds[0,0] for x in seeds[:,0]) or all(x == seeds[0,1] for x in seeds[:,1]):
@@ -76,8 +76,14 @@ def voronoi(seeds,bnd):
                 if (np.round(np.dot(Atmp,output),6)<=np.round(btmp.transpose(),6)).all():
                    if not any((output == x).all() for x in cells[j]):
                         cells[j].append(output)
-        cells[j] = np.asarray(cells[j])
+        cells[j] = np.asarray(counterClockwise(seeds[j], cells[j]))
     cells = np.asarray(cells)
 
 
     return cells
+
+# Arrange the vertices of a cell in counterclockwise order
+def counterClockwise(seed,cell):
+    vertex_radians = [atan2(vertex[1]-seed[1], vertex[0]-seed[0]) for vertex in cell]
+    scell = [vertex for _,vertex in sorted(zip(vertex_radians,cell))]
+    return scell

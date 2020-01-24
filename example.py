@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
 from math import pi
+from matplotlib import path
 from mpl_toolkits import mplot3d
 from scipy.spatial import ConvexHull
 from voronoi import voronoi 
@@ -38,15 +39,18 @@ def plot_voronoi(cells, seeds,centroids):
     ax.view_init(elev=90, azim=-90)
     plt.show()
 
+# unweighted centroid
+def uCentroid(cell):
+    length = cell.shape[0]
+    sum_x = np.sum(cell[:, 0])
+    sum_y = np.sum(cell[:, 1])   
+    return [sum_x/length, sum_y/length] 
 
-def calc_centroids(regions):
+def uCentroids(cells):
     centroids = []
-    for region in regions:
-        length = region.shape[0]
-        sum_x = np.sum(region[:, 0])
-        sum_y = np.sum(region[:, 1])
-        centroids.append([sum_x/length, sum_y/length])
-    return np.array(centroids)
+    for cell in cells:
+        centroids.append(uCentroid(cell))
+    return np.asarray(centroids)
 
 def init_phi(X, Y, centers, heights, sigma):
     phi = np.ones((X.shape[0],X.shape[0]))
@@ -55,31 +59,63 @@ def init_phi(X, Y, centers, heights, sigma):
         phi += gau
     return phi
 
+# weighted centroid
+def wCentroid(cell):
+    centroid = []
+    p = path.Path(cell)
+
+    # Create binary matrix (flags) with ones and zeros that's one 
+    # for the points that are in the cell
+    all_points = np.vstack([X.flatten(), Y.flatten()]).T
+    flags = p.contains_points(all_points)
+    reflags = np.reshape(flags, X.shape) # reshaped flags
+    
+    # With X,Y,flags and phi calculate the weighted centroids:
+    # (X.*flags.*phi)/sum(X.*flags) = centroid(0,0)
+    # (Y.*flags.*phi)/sum(Y.*flags) = centroid(0,1)
+    xin = np.multiply(X,reflags)
+    yin = np.multiply(Y,reflags)
+
+    centroid.append(np.sum(np.multiply(xin,phi))/np.sum(xin))
+    centroid.append(np.sum(np.multiply(yin,phi))/np.sum(yin))
+
+    return np.asarray(centroid)
+
+def wCentroids(cells):
+    centroids = []
+    for cell in cells:
+        centroids.append(wCentroid(cell))
+    return np.asarray(centroids)
+
+
+
 # parameter setup
 heighPar = 1
 sigPar = 1
 
 # boundary points, initial seed points
-bnd = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-seeds = np.array([[0.1, 0.1], [0.42, 0.53], [0.8, 0.3]])
+bnd = np.array([[0, 0], [4, 0], [4, 4], [0, 4]])
+seeds = np.array([[1, 1], [4, 4], [3, 2]])
 
 # constants
 mean_area = poly_area(bnd)/len(seeds)
 sigma = sigPar/2*sqrt(mean_area/pi)
 
 # build meshgrid with extreme points of boundary
-x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),100)
-y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),100)
+gran = 100
+x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),gran)
+y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),gran)
 X, Y = np.meshgrid(x_range,y_range)
 
 # first iteration
 cells = voronoi(seeds,bnd)
-centroids = calc_centroids(cells)
+centroids = uCentroids(cells)
 
 # initialize gauss functions
 areas = poly_areas(cells)
 heights = gauss_heights(areas, heighPar)
 phi = init_phi(X, Y, seeds, heights, sigma)
+centroids = wCentroids(cells)
 
 i=0
 # Perform LLoyd algorithm
@@ -87,6 +123,7 @@ while (not np.array_equal(seeds,centroids) and i<=5):
 
     i+=1
     print(i)
+    print(centroids)
 
     # plot the result...
     plot_voronoi(cells, seeds,centroids)
@@ -95,7 +132,7 @@ while (not np.array_equal(seeds,centroids) and i<=5):
     seeds = centroids
     cells = voronoi(seeds,bnd)
     areas = poly_areas(cells)
-    centroids = calc_centroids(cells)
+    centroids = wCentroids(cells)
 
     # initialize gauss functions
     areas = poly_areas(cells)
