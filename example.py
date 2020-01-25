@@ -38,7 +38,7 @@ def plot_voronoi(cells, seeds,centroids):
                 ax.plot(cell[simplex, 0],cell[simplex,1],'k-')
     ax.plot_surface(X, Y, phi, cmap='viridis', edgecolor='none', alpha=0.6)
     plt.draw()
-    plt.pause(0.01)
+    plt.pause(0.001)
 
 def init_phi(X, Y, centers, heights, sigma):
     phi = np.ones((X.shape[0],X.shape[0]))
@@ -93,7 +93,9 @@ def allInBnd(seeds):
     p = path.Path(bnd)
     return p.contains_points(seeds).all()
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------------
+# Algorithm starts here
+# -----------------------------------------------------------------------------------
 
 # setup
 gran = 100
@@ -134,8 +136,6 @@ while not np.array_equal(np.round(seeds,4),np.round(centroids,4)):
 
     i+=1
     print(i)
-    print("areas:")
-    print(areas)
 
     # plot the result...
     plot_voronoi(cells, seeds,centroids)
