@@ -5,11 +5,40 @@ import random, itertools, collections
 
 from math import atan2
 from math import degrees
+from numpy import linalg as la
 from scipy.spatial import Delaunay
 from scipy.spatial import ConvexHull
 
-from interLine import interLine
-from perpBisector2d import perpBisector2d
+
+
+def perpBisector2d(v1, v2):
+    vm = np.array([(v1[0] + v2[0])/2,(v1[1] + v2[1])/2]) # Mittelpunkt zwischen v1 und v2
+    v3 = np.array([v2[0] - v1[0],v2[1]-v1[1]]) # Richtungsvektor v1 -> v2 
+
+    Ad = np.array([v3[0]/ la.norm(v3,2),v3[1]/la.norm(v3,2)]) # Normierter Richtungsvektor
+    bd = np.dot(Ad,vm) # Skalarprodukt aus Richtungsvektor und Mittelpunktsvektor
+
+    if np.dot(Ad,v1) <= bd:
+        return Ad, bd
+    return np.negative(Ad), np.negative(bd)
+
+"""
+#lineA = [0.1, 0.2, 0.1]
+#lineB = [0.4, -0.2, 0.3]
+
+# A = [[0.1, 0.2], 
+#      [0.4, -0.2]]
+
+# b = [[0.1],
+#      [0.3]]
+"""
+def interLine(lineA,lineB):
+    if (lineA[0]*lineB[1] - lineB[0]*lineA[1] != 0): # Check if lines are parallel
+        A = np.array([[lineA[0],lineA[1]],[lineB[0],lineB[1]]])
+        b = np.array([[lineA[2]],[lineB[2]]])
+        res = np.dot(la.inv(A),b) # Returns nested matrix
+        return np.array([res.item(0),res.item(1)])
+    return False
 
 """
 Input:
