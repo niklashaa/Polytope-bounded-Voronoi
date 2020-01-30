@@ -16,6 +16,7 @@ bnd = np.array([[0, 0], [4, 0], [4, 4], [0, 4]])
 gran = 100
 heighPar = 20
 seedNum = 6
+stepsize = 0.1
 sigma = 1/2*sqrt(poly_area(bnd)/seedNum/pi)
 
 seeds = 4*np.random.rand(seedNum,2)

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import sqrt,atan2, cos, sin
 from mpl_toolkits import mplot3d
 from scipy.spatial import ConvexHull
 from matplotlib import path
@@ -64,6 +65,21 @@ def wCentroids(cells, phi):
         centroids.append(wCentroid(cell, phi))
     return np.asarray(centroids)
 
+def moveTowards(seed, centroid, stepsize):
+    dist = sqrt((centroid[0]-seed[0])**2 + (centroid[1]-seed[1])**2)
+    if dist < stepsize:
+        return centroid
+    rad = atan2(centroid[1]-seed[1], centroid[0]-seed[0])
+    new_x = seed[0] + stepsize*cos(rad)
+    new_y = seed[1] + stepsize*sin(rad)
+    return np.array([new_x, new_y])
+
+def allMoveTowards(seeds, centroids, stepsize):
+    new_centroids = []
+    for i, seed in enumerate(seeds):
+        new_centroids.append(moveTowards(seed, centroids[i], stepsize))
+    return np.asarray(new_centroids)
+
 def init_meshgrid(bnd, gran):
     return X, Y
 
@@ -79,15 +95,14 @@ def plot_voronoi(cells, seeds, centroids, phi):
     if not plt.fignum_exists(1):
         plt.ion()
         plt.show()
-    plt.cla()
     ax = plt.axes(projection='3d')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
     ax.view_init(elev=90, azim=-90)
 
-    ax.plot(seeds[:,0],seeds[:,1],'o')
-    ax.plot(centroids[:,0],centroids[:,1],'o')
+    ax.plot(seeds[:,0],seeds[:,1],'.')
+    ax.plot(centroids[:,0],centroids[:,1],'.')
     for cell in cells:
         if len(cell) >= 3:
             hull = ConvexHull(cell)		
