@@ -1,4 +1,4 @@
-from setup import bnd, heighPar, seeds, sigma, stepsize, X, Y
+from config import bnd, heighPar, seeds, sigma, stepsize, X, Y
 from functions import allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 

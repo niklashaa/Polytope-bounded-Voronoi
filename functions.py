@@ -5,7 +5,7 @@ from mpl_toolkits import mplot3d
 from scipy.spatial import ConvexHull
 from matplotlib import path
 
-from setup import X, Y
+from config import X, Y
 
 # Calculate the area of a polygon
 def poly_area(polytope):
