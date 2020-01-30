@@ -4,4 +4,7 @@ big areas tend to get smaller and the other way around
 
 Run the algorithm:
 1. Install requirements: `pip install -r requirements.txt`
-2. Execute example
+2. Execute example: `python example`
+
+Known bugs:
+Sometimes the initial seeds are set outside of the polygon which stops the algorithm.
