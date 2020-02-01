@@ -7,6 +7,9 @@ from matplotlib import path
 
 from config import X, Y
 
+def allInside(seeds, bnd):
+    return path.Path(bnd).contains_points(seeds).all()
+
 # Calculate the area of a polygon
 def poly_area(polytope):
     x = polytope[:,0]

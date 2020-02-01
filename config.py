@@ -9,7 +9,7 @@ def poly_area(polytope):
     return 0.5*np.abs(np.dot(x,np.roll(y,1))-np.dot(y,np.roll(x,1)))
 
 # -----------------------------------------------------------------------------------
-# Setup
+# Configurations
 # -----------------------------------------------------------------------------------
 
 bnd = np.array([[0, 0], [4, 0], [4, 4], [0, 4]])
@@ -18,6 +18,7 @@ heighPar = 20
 seedNum = 6
 stepsize = 0.1
 sigma = 1/2*sqrt(poly_area(bnd)/seedNum/pi)
+ai = 10
 
 seeds = 4*np.random.rand(seedNum,2)
 x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),gran)
