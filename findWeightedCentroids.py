@@ -1,5 +1,5 @@
 from config import bnd, heighPar, seeds, sigma, stepsize, X, Y
-from functions import allInside, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
+from functions import allInside, allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 from sys import maxsize
@@ -14,13 +14,11 @@ stdevs = []
 stdevs.append(maxsize)
 centroids = seeds
 
-# Perform LLoyd algorithm
+# Perform algorithm
 while True:
 
     # iteration
-    if not allInside(seeds,bnd):
-        raise Exception('Boundary does not contain all seeds:\n {}'.format(seeds))
-    seeds = allMoveTowards(seeds, centroids, stepsize)
+    seeds = allMoveSafeTowards(seeds, centroids, stepsize)
     cells = voronoi(seeds,bnd)
 
     areas = poly_areas(cells)

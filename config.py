@@ -13,11 +13,11 @@ def poly_area(polytope):
 # -----------------------------------------------------------------------------------
 
 bnd = np.array([[0, 0], [4, 0], [4, 4], [0, 4]])
-gran = 100
-heighPar = 20
+gran = 200
+heighPar = 40
 seedNum = 6
 stepsize = 0.1
-sigma = 1/2*sqrt(poly_area(bnd)/seedNum/pi)
+sigma = 10/2*sqrt(poly_area(bnd)/seedNum/pi)
 ai = 10
 
 seeds = 4*np.random.rand(seedNum,2)

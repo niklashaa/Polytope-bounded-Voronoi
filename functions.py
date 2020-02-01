@@ -4,8 +4,9 @@ from math import sqrt,atan2, cos, sin
 from mpl_toolkits import mplot3d
 from scipy.spatial import ConvexHull
 from matplotlib import path
+from shapely.geometry import LineString
 
-from config import X, Y
+from config import bnd, X, Y
 
 def allInside(seeds, bnd):
     return path.Path(bnd).contains_points(seeds).all()
@@ -77,11 +78,36 @@ def moveTowards(seed, centroid, stepsize):
     new_y = seed[1] + stepsize*sin(rad)
     return np.array([new_x, new_y])
 
+def moveSafeTowards(seed, centroid, stepsize):
+    if path.Path(bnd).contains_point(centroid):
+        return moveTowards(seed, centroid, stepsize)
+    else:
+        moveLine = LineString([seed, centroid])
+        bndList = bnd.tolist()
+        bndList.append(bndList[0])
+        intersect = None
+        for i, point in enumerate(bndList):
+            bndLine = LineString([point, bndList[i+1]])
+            intersect = moveLine.intersection(bndLine)
+            if not intersect.is_empty:
+                intersect = np.asarray(intersect)
+                break
+
+        dist = sqrt((intersect[0]-seed[0])**2 + (intersect[1]-seed[1])**2)
+        stepsize = dist - 0.0001
+        return moveTowards(seed, centroid, stepsize)
+
 def allMoveTowards(seeds, centroids, stepsize):
-    new_centroids = []
+    newSeeds = []
     for i, seed in enumerate(seeds):
-        new_centroids.append(moveTowards(seed, centroids[i], stepsize))
-    return np.asarray(new_centroids)
+        newSeeds.append(moveTowards(seed, centroids[i], stepsize))
+    return np.asarray(newSeeds)
+
+def allMoveSafeTowards(seeds, centroids, stepsize):
+    newSeeds = []
+    for i, seed in enumerate(seeds):
+        newSeeds.append(moveSafeTowards(seed, centroids[i], stepsize))
+    return np.asarray(newSeeds)    
 
 def init_meshgrid(bnd, gran):
     return X, Y
