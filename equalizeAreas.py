@@ -20,9 +20,7 @@ while True:
     # iteration
     seeds = allMoveSafeTowards(seeds, centroids, stepsize)
     cells = voronoi(seeds,bnd)
-
     areas = poly_areas(cells)
-    stdev = np.round(np.std(areas),4)
     heights = gauss_heights(areas, heighPar)
     phi = init_phi(X, Y, seeds, heights, sigma)
     centroids = wCentroids(cells, phi)
@@ -30,6 +28,7 @@ while True:
     # plot the result
     plot_voronoi(cells, seeds,centroids, phi)
 
+    stdev = np.round(np.std(areas),4)
     if stdev >= stdevs[-1]:
         break
     stdevs.append(stdev)
