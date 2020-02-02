@@ -1,5 +1,5 @@
 from config import ai, bnd, heighPar, seeds, sigma, stepsize, X, Y
-from functions import allInside, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
+from functions import allInside, allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 import numpy as np
@@ -19,11 +19,8 @@ minSeeds = []
 while True:
 
     # iteration
-    seeds = allMoveTowards(seeds, centroids, stepsize)
+    seeds = allMoveSafeTowards(seeds, centroids, stepsize)
     cells = voronoi(seeds,bnd)
-    if not allInside(seeds,bnd):
-        raise Exception('Boundary does not contain all seeds:\n {}'.format(seeds))
-
     areas = poly_areas(cells)
     stdev = np.round(np.std(areas),4)
     heights = gauss_heights(areas, heighPar)
@@ -31,12 +28,14 @@ while True:
     centroids = wCentroids(cells, phi)
 
     # plot the result
-    # plot_voronoi(cells, seeds,centroids, phi)
+    plot_voronoi(cells, seeds,centroids, phi)
+    # print(allInsideCell(seeds,cells))
+    
     print(ai)
     if stdev >= stdevs[-1]:
         ai = ai - 1 
     else:
-        ai = 30
+        ai = 10
     if ai == 0:
         break
 
