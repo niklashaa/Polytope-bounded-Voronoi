@@ -20,7 +20,7 @@ stepsize = 0.1
 sigma = 10/2*sqrt(poly_area(bnd)/seedNum/pi)
 ai = 10
 
-seeds = 4*np.random.rand(seedNum,2)
+seeds = [4*np.random.rand(2,) for num in range(seedNum)]
 x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),gran)
 y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),gran)
 X, Y = np.meshgrid(x_range,y_range)

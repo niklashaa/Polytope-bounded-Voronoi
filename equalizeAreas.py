@@ -1,5 +1,5 @@
 from config import bnd, heighPar, seeds, sigma, stepsize, X, Y
-from functions import allInside, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
+from functions import allInside, allInsideCell, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 import numpy as np
@@ -28,6 +28,7 @@ while True:
     # plot the result
     plot_voronoi(cells, seeds,centroids, phi)
 
+    print(allInsideCell(seeds,cells))
     stdev = np.round(np.std(areas),4)
     if stdev >= stdevs[-1]:
         break

@@ -11,6 +11,15 @@ from config import bnd, X, Y
 def allInside(seeds, bnd):
     return path.Path(bnd).contains_points(seeds).all()
 
+def insideCell(seed, cell):
+    return path.Path(cell).contains_point(seed)
+
+def allInsideCell(seeds, cells):
+    inside = True
+    for seed, cell in zip(seeds,cells): 
+        inside *= insideCell(seed, cell)
+    return inside
+
 # Calculate the area of a polygon
 def poly_area(polytope):
     x = polytope[:,0]

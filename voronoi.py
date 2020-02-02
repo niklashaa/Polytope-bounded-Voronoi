@@ -50,6 +50,12 @@ Output:
 """
 def voronoi(seeds,bnd):
 
+    if seeds.shape[0] == 1:
+        return None
+    
+    if seeds.shape[0] == 2:
+        return None
+
     if all(x == seeds[0,0] for x in seeds[:,0]) or all(x == seeds[0,1] for x in seeds[:,1]):
         raise Exception('seeds have the same value for x or y:\n {}'.format(seeds))
 
@@ -92,23 +98,22 @@ def voronoi(seeds,bnd):
         mylistb.append(np.matrix(b))
 
     # obtain voronoi vertices
-    cells = [ [] for seed in seeds]
+    cells = []
     for j in range(len(mylistA)):
+        cell = []
         Atmp = np.concatenate((mylistA[j],Abnd))
         btmp = np.concatenate((mylistb[j].transpose(),-bbnd))
         combinations = itertools.combinations(range(Atmp.shape[0]),2)
         for tupl in combinations:
             lineA = [Atmp[tupl[0]][0,0],Atmp[tupl[0]][0,1],btmp[tupl[0]][0,0]]
             lineB = [Atmp[tupl[1]][0,0],Atmp[tupl[1]][0,1],btmp[tupl[1]][0,0]]
-            output = interLine(lineA,lineB)
-            if type(output) != type(False):
-                if (np.round(np.dot(Atmp,output),6)<=np.round(btmp.transpose(),6)).all():
-                   if not any((output == x).all() for x in cells[j]):
-                        cells[j].append(output)
-        cells[j] = np.asarray(counterClockwise(seeds[j], cells[j]))
-    cells = np.asarray(cells)
-
-
+            vertex = interLine(lineA,lineB)
+            if type(vertex) != type(False):
+                if (np.round(np.dot(Atmp,vertex),6)<=np.round(btmp.transpose(),6)).all():
+                    if not any((vertex == x).all() for x in cell):
+                        cell.append(vertex)
+        cell = np.asarray(counterClockwise(seeds[j], cell))
+        cells.append(cell)
     return cells
 
 # Arrange the vertices of a cell in counterclockwise order
