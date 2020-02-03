@@ -14,7 +14,8 @@ stdevs = []
 stdevs.append(maxsize)
 centroids = seeds
 
-# Perform equalization of areas
+# Moves seeds towards the weighted centroids until the voronoi tesselation yields 
+# a higher standard deviation of the areas
 while True:
 
     # iteration

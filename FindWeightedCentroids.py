@@ -6,15 +6,11 @@ from sys import maxsize
 import matplotlib.pyplot as plt
 import numpy as np
 
-# -----------------------------------------------------------------------------------
-# Algorithm
-# -----------------------------------------------------------------------------------
-
 stdevs = []
 stdevs.append(maxsize)
 centroids = seeds
 
-# Perform algorithm
+# Continues until the seeds lie in the weigthed centroids of their cells
 while True:
 
     # iteration
@@ -26,7 +22,7 @@ while True:
     centroids = wCentroids(cells, phi)
 
     # plot the result
-    plot_voronoi(cells, seeds,centroids, phi)
+    # plot_voronoi(cells, seeds,centroids, phi)
     # print(allInsideCell(seeds,cells))
 
     stdev = np.round(np.std(areas),4)

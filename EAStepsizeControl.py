@@ -1,4 +1,4 @@
-from config import bnd, heighPar, seeds, sigma, stepsize, X, Y
+from config import bnd, heighPar, seeds, sigma, X, Y
 from functions import allInside, allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
@@ -6,18 +6,25 @@ import numpy as np
 from sys import maxsize
 from matplotlib import path, pyplot as plt
 
-initai = 10
-ai = initai
+aimax = 10
+ai = aimax
 stdevs = []
 stdevs.append(maxsize)
+stepsize = 20 # max stepsize
+decFactor = 0.5
+minStepsize = 0.01
 
 centroids = seeds
 minSeeds = []
 minstdev = maxsize
 
-# Introduces a mechanism of additional iterations to improve the chances to 
-# find a better local minimum
+# Introduces a mechanism of a decreasing step size 
+# on top of additional iterations to the let the 
+# algorithm converge
 while True:
+
+    if stepsize < minStepsize:
+        break
 
     # iteration
     seeds = allMoveSafeTowards(seeds, centroids, stepsize)
@@ -34,15 +41,18 @@ while True:
     
     print(ai)
     if stdev >= minstdev:
-        ai = ai - 1 
+        ai -= 1 
     else:
-        ai = initai
+        ai = aimax
         minSeeds = seeds
         minstdev = stdev
     if ai == 0:
         seeds = minSeeds
+        centroids = minSeeds
         stdevs.append(minstdev)
-        break
+        stepsize = decFactor*stepsize
+        ai = aimax
+        continue
 
     stdevs.append(stdev)
 

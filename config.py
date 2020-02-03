@@ -15,10 +15,9 @@ def poly_area(polytope):
 bnd = np.array([[0, 0], [4, 0], [4, 4], [0, 4]])
 gran = 200
 heighPar = 100
-seedNum = 6
+seedNum = 15
 stepsize = 0.1
 sigma = 40/2*sqrt(poly_area(bnd)/seedNum/pi)
-ai = 10
 
 seeds = [4*np.random.rand(2,) for num in range(seedNum)]
 x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),gran)
