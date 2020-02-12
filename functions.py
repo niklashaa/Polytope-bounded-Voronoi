@@ -116,9 +116,6 @@ def allMoveSafeTowards(seeds, centroids, stepsize, bnd):
         newSeeds.append(moveSafeTowards(seed, centroids[i], stepsize, bnd))
     return np.asarray(newSeeds)    
 
-def init_meshgrid(bnd, gran):
-    return X, Y
-
 def init_phi(X, Y, centers, heights, sigma):
     phi = np.ones((X.shape[0],X.shape[0]))
     for i, center in enumerate(centers):
