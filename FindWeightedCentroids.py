@@ -1,4 +1,4 @@
-from functions import allInside, allInsideCell, allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
+from functions import allInside, allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 from sys import maxsize
@@ -41,8 +41,7 @@ while True:
     centroids = wCentroids(cells, phi, X, Y)
 
     # plot the result
-    # plot_voronoi(cells, seeds,centroids, phi)
-    # print(allInsideCell(seeds,cells))
+     plot_voronoi(cells, seeds,centroids, phi)
 
     stdev = np.round(np.std(areas),4)
     print(stdev)

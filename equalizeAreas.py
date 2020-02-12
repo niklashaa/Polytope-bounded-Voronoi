@@ -1,4 +1,4 @@
-from functions import allInside, allInsideCell, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
+from functions import allInside, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 import numpy as np

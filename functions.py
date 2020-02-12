@@ -6,7 +6,7 @@ from scipy.spatial import ConvexHull
 from matplotlib import path
 from shapely.geometry import LineString
 
-def allInside(seeds, bnd):
+def allInsideBnd(seeds, bnd):
     return path.Path(bnd).contains_points(seeds, radius=0.000001).all()
 
 def insideCell(seed, cell):
@@ -55,7 +55,7 @@ def wCentroid(cell, phi, X, Y):
     # Create binary matrix (flags) with ones and zeros that's one 
     # for the points that are in the cell
     all_points = np.vstack([X.flatten(), Y.flatten()]).T
-    flags = p.contains_points(all_points, radius=0.00000001)
+    flags = p.contains_points(all_points, radius=0.000001)
     reflags = np.reshape(flags, X.shape) # reshaped flags
     
     # With X,Y,flags and phi calculate the weighted centroids:

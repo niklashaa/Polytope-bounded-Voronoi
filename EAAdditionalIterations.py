@@ -49,7 +49,6 @@ while True:
 
     # plot the result
     # plot_voronoi(cells, seeds,centroids, phi)
-    # print(allInsideCell(seeds,cells))
     
     print(ai)
     if stdev >= minstdev:
