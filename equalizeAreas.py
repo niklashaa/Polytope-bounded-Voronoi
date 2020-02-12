@@ -1,10 +1,25 @@
-from config import bnd, heighPar, seeds, sigma, stepsize, X, Y
-from functions import allInside, allInsideCell, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_areas, uCentroids, wCentroids
+from functions import allInside, allInsideCell, allMoveSafeTowards, allMoveTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 import numpy as np
 from sys import maxsize
 from matplotlib import path, pyplot as plt
+
+# -----------------------------------------------------------------------------------
+# Setup
+# -----------------------------------------------------------------------------------
+
+bnd = np.array([[0, 0], [9, 0], [9, 9], [0, 9]])
+gran = 10
+heighPar = 100
+seedNum = 15
+stepsize = 0.1
+sigma = 40/2*np.sqrt(poly_area(bnd)/seedNum/np.pi)
+
+seeds = [4*np.random.rand(2,) for num in range(seedNum)]
+x_range = np.linspace(np.amin(bnd[:,0]),np.amax(bnd[:,0]),gran)
+y_range = np.linspace(np.amin(bnd[:,1]),np.amax(bnd[:,1]),gran)
+X, Y = np.meshgrid(x_range,y_range)
 
 # -----------------------------------------------------------------------------------
 # Algorithm
@@ -19,7 +34,7 @@ centroids = seeds
 while True:
 
     # iteration
-    seeds = allMoveSafeTowards(seeds, centroids, stepsize)
+    seeds = allMoveSafeTowards(seeds, centroids, stepsize, bnd)
     cells = voronoi(seeds,bnd)
     areas = poly_areas(cells)
     heights = gauss_heights(areas, heighPar)
@@ -27,7 +42,7 @@ while True:
     centroids = wCentroids(cells, phi)
 
     # plot the result
-    plot_voronoi(cells, seeds,centroids, phi)
+    plot_voronoi(cells, seeds,centroids, X, Y, phi)
 
     print(allInsideCell(seeds,cells))
     stdev = np.round(np.std(areas),4)

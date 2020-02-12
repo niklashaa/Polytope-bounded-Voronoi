@@ -57,9 +57,8 @@ def wCentroid(cell, phi):
     # Create binary matrix (flags) with ones and zeros that's one 
     # for the points that are in the cell
     all_points = np.vstack([X.flatten(), Y.flatten()]).T
-    flags = p.contains_points(all_points, radius=0.0001)
+    flags = p.contains_points(all_points, radius=0.00000001)
     reflags = np.reshape(flags, X.shape) # reshaped flags
-    print(reflags)
     
     # With X,Y,flags and phi calculate the weighted centroids:
     # (X.*flags.*phi)/sum(phi*flags) = centroid(0,0)
@@ -88,7 +87,7 @@ def moveTowards(seed, centroid, stepsize):
     new_y = seed[1] + stepsize*sin(rad)
     return np.array([new_x, new_y])
 
-def moveSafeTowards(seed, centroid, stepsize):
+def moveSafeTowards(seed, centroid, stepsize, bnd):
     if path.Path(bnd).contains_point(centroid):
         return moveTowards(seed, centroid, stepsize)
     else:
@@ -113,10 +112,10 @@ def allMoveTowards(seeds, centroids, stepsize):
         newSeeds.append(moveTowards(seed, centroids[i], stepsize))
     return np.asarray(newSeeds)
 
-def allMoveSafeTowards(seeds, centroids, stepsize):
+def allMoveSafeTowards(seeds, centroids, stepsize, bnd):
     newSeeds = []
     for i, seed in enumerate(seeds):
-        newSeeds.append(moveSafeTowards(seed, centroids[i], stepsize))
+        newSeeds.append(moveSafeTowards(seed, centroids[i], stepsize, bnd))
     return np.asarray(newSeeds)    
 
 def init_meshgrid(bnd, gran):
@@ -130,7 +129,7 @@ def init_phi(X, Y, centers, heights, sigma):
     return phi
 
 # Plot weighted voronoi
-def plot_voronoi(cells, seeds, centroids, phi):
+def plot_voronoi(cells, seeds, centroids, X, Y, phi):
     if not plt.fignum_exists(1):
         plt.ion()
         plt.show()

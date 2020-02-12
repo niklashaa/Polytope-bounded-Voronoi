@@ -5,10 +5,10 @@ import numpy as np
 class TestFunctions(unittest.TestCase):
 
     def setUp(self):
-        self.bnd = np.array([[0, 0], [4.5, 0], [4.5, 4.5], [0, 4.5]])
+        self.bnd = np.array([[0, 0], [9, 0], [9, 9], [0, 9]])
         self.seeds = np.array([[1, 1],[2,1],[1,2],[3,4]])
 
-        self.triangle = np.array([[0, 0],[4,0],[2,3]])
+        self.triangle = np.array([[0, 0],[8,0],[4,6]])
 
         x_range = np.linspace(np.amin(self.bnd[:,0]),np.amax(self.bnd[:,0]),10)
         y_range = np.linspace(np.amin(self.bnd[:,1]),np.amax(self.bnd[:,1]),10)
@@ -26,17 +26,18 @@ class TestFunctions(unittest.TestCase):
         self.assertNotEqual(area3,1)
 
     def test_uCentroid(self):
-        centroid = np.array([2,1])
+        centroid = np.array([4,2])
         np.testing.assert_equal(functions.uCentroid(self.triangle), centroid)
 
     def test_wCentroid(self):
-        centroid = np.array([2,1])
+        centroid = np.array([4,2])
         phi = np.ones((self.X.shape[0],self.X.shape[0]))
         wCentroid = np.round(functions.wCentroid(self.triangle,phi))
         np.testing.assert_equal(wCentroid, centroid)
 
         phi = self.Y*phi
-        wCentroid = np.round(functions.wCentroid(self.triangle,phi))
+        centroid = np.array([4,3.290909])
+        wCentroid = np.round(functions.wCentroid(self.triangle,phi),6)
         np.testing.assert_equal(wCentroid, centroid)
 
 if __name__ == '__main__':
