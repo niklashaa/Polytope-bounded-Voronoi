@@ -10,7 +10,7 @@ from matplotlib import path, pyplot as plt
 # -----------------------------------------------------------------------------------
 
 bnd = np.array([[0, 0], [9, 0], [9, 9], [0, 9]])
-gran = 100
+gran = 200
 heighPar = 100
 seedNum = 15
 stepsize = 0.1

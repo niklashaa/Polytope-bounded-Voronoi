@@ -32,12 +32,12 @@ class TestFunctions(unittest.TestCase):
     def test_wCentroid(self):
         centroid = np.array([4,2])
         phi = np.ones((self.X.shape[0],self.X.shape[0]))
-        wCentroid = np.round(functions.wCentroid(self.triangle,phi))
+        wCentroid = np.round(functions.wCentroid(self.triangle,phi, self.X, self.Y))
         np.testing.assert_equal(wCentroid, centroid)
 
         phi = self.Y*phi
         centroid = np.array([4,3.290909])
-        wCentroid = np.round(functions.wCentroid(self.triangle,phi),6)
+        wCentroid = np.round(functions.wCentroid(self.triangle,phi, self.X, self.Y),6)
         np.testing.assert_equal(wCentroid, centroid)
 
 if __name__ == '__main__':

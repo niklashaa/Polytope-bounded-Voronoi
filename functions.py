@@ -92,7 +92,6 @@ def moveSafeTowards(seed, centroid, stepsize, bnd):
         moveLine = LineString([seed, centroid])
         bndList = bnd.tolist()
         bndList.append(bndList[0])
-        print(bndList)
         intersect = None
         for i, point in enumerate(bndList):
             bndLine = LineString([point, bndList[i+1]])
