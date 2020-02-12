@@ -6,13 +6,11 @@ from scipy.spatial import ConvexHull
 from matplotlib import path
 from shapely.geometry import LineString
 
-from config import bnd, X, Y
-
 def allInside(seeds, bnd):
-    return path.Path(bnd).contains_points(seeds).all()
+    return path.Path(bnd).contains_points(seeds, radius=0.000001).all()
 
 def insideCell(seed, cell):
-    return path.Path(cell).contains_point(seed)
+    return path.Path(cell).contains_point(seed, radius=0.000001)
 
 def allInsideCell(seeds, cells):
     inside = True
@@ -50,7 +48,7 @@ def uCentroids(cells):
     return np.asarray(centroids)
 
 # weighted centroid
-def wCentroid(cell, phi):
+def wCentroid(cell, phi, X, Y):
     centroid = []
     p = path.Path(cell)
 
@@ -72,10 +70,10 @@ def wCentroid(cell, phi):
 
     return np.asarray(centroid)
 
-def wCentroids(cells, phi):
+def wCentroids(cells, phi, X, Y):
     centroids = []
     for cell in cells:
-        centroids.append(wCentroid(cell, phi))
+        centroids.append(wCentroid(cell, phi, X, Y))
     return np.asarray(centroids)
 
 def moveTowards(seed, centroid, stepsize):
@@ -88,12 +86,13 @@ def moveTowards(seed, centroid, stepsize):
     return np.array([new_x, new_y])
 
 def moveSafeTowards(seed, centroid, stepsize, bnd):
-    if path.Path(bnd).contains_point(centroid):
+    if insideCell(seed, bnd):
         return moveTowards(seed, centroid, stepsize)
     else:
         moveLine = LineString([seed, centroid])
         bndList = bnd.tolist()
         bndList.append(bndList[0])
+        print(bndList)
         intersect = None
         for i, point in enumerate(bndList):
             bndLine = LineString([point, bndList[i+1]])
