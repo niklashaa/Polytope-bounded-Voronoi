@@ -25,6 +25,10 @@ stdevs = []
 stdevs.append(maxsize)
 centroids = seeds
 
+# -----------------------------------------------------------------------------------
+# Algorithm
+# -----------------------------------------------------------------------------------
+
 # Continues until the seeds lie in the weigthed centroids of their cells
 while True:
 
@@ -43,6 +47,8 @@ while True:
     stdev = np.round(np.std(areas),4)
     print(stdev)
     if np.array_equal(np.round(seeds,3),np.round(centroids,3)):
+        break
+    if len(stdevs) > 6 and len(set(stdevs[-6:])) < 3:
         break
     stdevs.append(stdev)
 
