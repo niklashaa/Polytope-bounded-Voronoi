@@ -25,6 +25,13 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(area2,1)
         self.assertNotEqual(area3,1)
 
+    def test_gauss_heights(self):
+        areas = np.array([5, 6, 7])
+        heighpar = 1
+        res = np.round(functions.gauss_heights(areas, heighpar), 3)
+        exp = np.array([-0.167, 0, 0.167])
+        np.testing.assert_equal(res, exp)
+
     def test_uCentroid(self):
         centroid = np.array([4,2])
         np.testing.assert_equal(functions.uCentroid(self.triangle), centroid)
