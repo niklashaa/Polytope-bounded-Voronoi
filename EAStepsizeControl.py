@@ -10,7 +10,7 @@ aimax = 10
 ai = aimax
 stdevs = []
 stdevs.append(maxsize)
-stepsize = 20 # max stepsize
+stepsize = 20 
 decFactor = 0.5
 minStepsize = 0.01
 

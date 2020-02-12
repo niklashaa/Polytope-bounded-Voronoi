@@ -57,8 +57,9 @@ def wCentroid(cell, phi):
     # Create binary matrix (flags) with ones and zeros that's one 
     # for the points that are in the cell
     all_points = np.vstack([X.flatten(), Y.flatten()]).T
-    flags = p.contains_points(all_points)
+    flags = p.contains_points(all_points, radius=0.0001)
     reflags = np.reshape(flags, X.shape) # reshaped flags
+    print(reflags)
     
     # With X,Y,flags and phi calculate the weighted centroids:
     # (X.*flags.*phi)/sum(phi*flags) = centroid(0,0)
