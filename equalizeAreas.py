@@ -10,10 +10,10 @@ from matplotlib import path, pyplot as plt
 # -----------------------------------------------------------------------------------
 
 bnd = np.array([[0, 0], [9, 0], [9, 9], [0, 9]])
-gran = 10
+gran = 100
 heighPar = 100
 seedNum = 15
-stepsize = 0.1
+stepsize = 1
 sigma = 40/2*np.sqrt(poly_area(bnd)/seedNum/np.pi)
 
 seeds = [4*np.random.rand(2,) for num in range(seedNum)]
@@ -39,13 +39,13 @@ while True:
     areas = poly_areas(cells)
     heights = gauss_heights(areas, heighPar)
     phi = init_phi(X, Y, seeds, heights, sigma)
-    centroids = wCentroids(cells, phi)
+    centroids = wCentroids(cells, phi, X, Y)
 
     # plot the result
-    plot_voronoi(cells, seeds,centroids, X, Y, phi)
+    # plot_voronoi(cells, seeds,centroids, X, Y, phi)
 
-    print(allInsideCell(seeds,cells))
     stdev = np.round(np.std(areas),4)
+    print(stdev)
     if stdev >= stdevs[-1]:
         break
     stdevs.append(stdev)
