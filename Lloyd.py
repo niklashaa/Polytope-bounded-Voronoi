@@ -18,7 +18,7 @@ centroids = seeds
 # Algorithm
 # -----------------------------------------------------------------------------------
 
-# Continues until the seeds lie in the weigthed centroids of their cells
+# Lloyd algorithm
 while True:
 
     # iteration
@@ -30,7 +30,7 @@ while True:
     areas = poly_areas(cells)
     heights = gauss_heights(areas, heighpar)
     phi = init_phi(X, Y, seeds, heights, sigma)
-    centroids = wCentroids(cells, phi, X, Y)
+    centroids = uCentroids(cells)
 
     # plot the result
     # plot_voronoi(cells, seeds, centroids, X, Y, phi)
