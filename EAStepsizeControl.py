@@ -1,4 +1,5 @@
-from main import bnd, gran, heighpar, sigma, seeds, X, Y
+from config import bnd, centroids, gran, heighpar, stepsize, sigma, seeds, X, Y
+from config import finalstd, stdevs
 from functions import allMoveSafeTowards, allInsideBnd, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
@@ -12,8 +13,6 @@ from matplotlib import path, pyplot as plt
 
 aimax = 10
 ai = aimax
-stdevs = []
-stdevs.append(maxsize)
 stepsize = 10 
 decFactor = 0.5
 minStepsize = 0.5
@@ -33,6 +32,7 @@ print("Start equalizing areas with stepsize control")
 while True:
 
     if stepsize < minStepsize:
+        finalstd.append(stdevs[-1])
         break
 
     # iteration
@@ -63,8 +63,8 @@ while True:
 
     stdevs.append(stdev)
 
-plt.clf()
-plt.ioff()
-plt.plot(range(len(stdevs)-1),stdevs[1:])
-plt.show()
-
+#plt.clf()
+#plt.ioff()
+#plt.plot(range(len(stdevs)-1),stdevs[1:])
+#plt.show()
+#

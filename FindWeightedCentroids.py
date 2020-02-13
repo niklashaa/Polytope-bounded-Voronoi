@@ -1,18 +1,11 @@
-from main import bnd, gran, heighpar, stepsize, sigma, seeds, X, Y
+from config import bnd, centroids, gran, heighpar, stepsize, sigma, seeds, X, Y
+from config import finalstd, stdevs
 from functions import allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 from sys import maxsize
 import matplotlib.pyplot as plt
 import numpy as np
-
-# -----------------------------------------------------------------------------------
-# Setup
-# -----------------------------------------------------------------------------------
-
-stdevs = []
-stdevs.append(maxsize)
-centroids = seeds
 
 # -----------------------------------------------------------------------------------
 # Algorithm
@@ -37,14 +30,15 @@ while True:
     # plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
     stdev = np.round(np.std(areas),4)
-    print(stdev)
     if np.array_equal(np.round(seeds,3),np.round(centroids,3)):
+        finalstd.append(stdev)
         break
     if len(stdevs) > 6 and len(set(stdevs[-6:])) < 3:
+        finalstd.append(stdev)
         break
     stdevs.append(stdev)
 
-plt.clf()
-plt.ioff()
-plt.plot(range(len(stdevs)-1),stdevs[1:])
-plt.show()
+#plt.clf()
+#plt.ioff()
+#plt.plot(range(len(stdevs)-1),stdevs[1:])
+#plt.show()
