@@ -18,6 +18,7 @@ centroids = seeds
 # Algorithm
 # -----------------------------------------------------------------------------------
 
+print("Start finding weighted centroids")
 # Continues until the seeds lie in the weigthed centroids of their cells
 while True:
 

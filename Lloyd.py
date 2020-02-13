@@ -1,5 +1,5 @@
 from main import bnd, gran, heighpar, stepsize, sigma, seeds, X, Y
-from functions import allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
+from functions import allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids
 from voronoi import voronoi
 
 from sys import maxsize
@@ -18,6 +18,7 @@ centroids = seeds
 # Algorithm
 # -----------------------------------------------------------------------------------
 
+print("Start Lloyd algorithm")
 # Lloyd algorithm
 while True:
 

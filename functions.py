@@ -86,15 +86,15 @@ def moveTowards(seed, centroid, stepsize):
     return np.array([new_x, new_y])
 
 def moveSafeTowards(seed, centroid, stepsize, bnd):
-    if insideCell(seed, bnd):
+    if insideCell(centroid, bnd):
         return moveTowards(seed, centroid, stepsize)
     else:
         moveLine = LineString([seed, centroid])
-        bndList = bnd.tolist()
-        bndList.append(bndList[0])
+        bndlist = bnd.tolist()
+        bndlist.append(bndlist[0])
         intersect = None
-        for i, point in enumerate(bndList):
-            bndLine = LineString([point, bndList[i+1]])
+        for i, point in enumerate(bndlist):
+            bndLine = LineString([point, bndlist[i+1]])
             intersect = moveLine.intersection(bndLine)
             if not intersect.is_empty:
                 intersect = np.asarray(intersect)

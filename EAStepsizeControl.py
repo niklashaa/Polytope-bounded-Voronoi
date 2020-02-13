@@ -1,5 +1,5 @@
 from main import bnd, gran, heighpar, sigma, seeds, X, Y
-from functions import allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
+from functions import allMoveSafeTowards, allInsideBnd, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 import numpy as np
@@ -29,6 +29,7 @@ minstdev = maxsize
 # Introduces a mechanism of a decreasing step size 
 # on top of additional iterations to the let the 
 # algorithm converge
+print("Start equalizing areas with stepsize control")
 while True:
 
     if stepsize < minStepsize:
