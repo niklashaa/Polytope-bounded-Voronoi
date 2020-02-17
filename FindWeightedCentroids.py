@@ -17,7 +17,6 @@ def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
     minseeds = seeds
 
     while True:
-        print(ai)
 
         seeds = allMoveSafeTowards(seeds, centroids, stepsize, bnd)
         cells = voronoi(seeds,bnd)
@@ -29,7 +28,7 @@ def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
         sumdist = sumDist(seeds,centroids)
 
         # plot the result
-        plot_voronoi(cells, seeds, centroids, X, Y, phi)
+#        plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
         if sumdist >= min(sumdists):
             ai -= 1 
