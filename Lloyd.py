@@ -4,7 +4,7 @@ from voronoi import voronoi
 from sys import maxsize
 import numpy as np
 
-def lloyd(seeds,stepsize, bnd, X, Y):
+def lloyd(seeds,stepsize, bnd, X, Y, plot):
 
     print("Start Lloyd algorithm")
     stdevs = [maxsize]
@@ -17,7 +17,8 @@ def lloyd(seeds,stepsize, bnd, X, Y):
         centroids = uCentroids(cells)
 
         # plot the result
-        # plot_voronoi(cells, seeds, centroids, X, Y, phi)
+        if(plot):
+            plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
         stdev = np.round(np.std(areas),4)
         if np.array_equal(np.round(seeds,3),np.round(centroids,3)):

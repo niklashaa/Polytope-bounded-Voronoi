@@ -4,10 +4,10 @@ from voronoi import voronoi
 from sys import maxsize
 import numpy as np
 
-def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
+def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y, plot):
     aimax = 40
     ai = aimax
-    stepsize = 0.9
+    stepsize = 10
     decFactor = 0.5
 
     print("Start finding weighted centroids")
@@ -28,7 +28,8 @@ def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
         sumdist = sumDist(seeds,centroids)
 
         # plot the result
-#        plot_voronoi(cells, seeds, centroids, X, Y, phi)
+        if(plot):
+            plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
         if sumdist >= min(sumdists):
             ai -= 1 
@@ -44,7 +45,7 @@ def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
             ai = aimax
             continue
 
-        if np.array_equal(np.round(seeds,3),np.round(centroids,3)):
+        if np.array_equal(np.round(seeds,2),np.round(centroids,2)):
             break
 
         stdevs.append(stdev)

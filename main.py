@@ -10,17 +10,14 @@ import Lloyd
 import FindWeightedCentroids
 import EAStepsizeControl
 
-initseeds = config.seeds
-
 stdf = open("stdevs.csv","w+")
 stdf.write("Lloyd;FWC;EASC\n")
 
-
-iterations = 2
+iterations = 20
 while iterations > 0:
-    stdevs1 = Lloyd.lloyd(seeds, stepsize, bnd, X, Y)
-    stdevs2 = FindWeightedCentroids.findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y)
-    stdevs3 = EAStepsizeControl.eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y)
+    stdevs1 = Lloyd.lloyd(seeds, stepsize, bnd, X, Y, False)
+    stdevs2 = FindWeightedCentroids.findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y, False)
+    stdevs3 = EAStepsizeControl.eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y, False)
 #    plt.clf()
 #    plt.ioff()
 #    plt.plot(range(len(stdevs)-1),stdevs[1:])
@@ -34,5 +31,4 @@ while iterations > 0:
     stdf.write(';'.join(map(str, finalstd)))
     stdf.write("\n")
     seeds = [9*np.random.rand(2,) for num in range(config.seednum)]
-    initseeds = config.seeds
     iterations -= 1

@@ -4,7 +4,7 @@ from voronoi import voronoi
 from sys import maxsize
 import numpy as np
 
-def eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y):
+def eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y, plot):
     aimax = 10
     ai = aimax
     stepsize = 10 
@@ -30,7 +30,8 @@ def eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y):
         centroids = wCentroids(cells, phi, X, Y)
 
         # plot the result
-#        plot_voronoi(cells, seeds, centroids, X, Y, phi)
+        if(plot):
+            plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
         if stdev >= min(stdevs):
             ai -= 1 
