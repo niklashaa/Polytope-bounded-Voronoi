@@ -18,10 +18,6 @@ while iterations > 0:
     stdevs1 = Lloyd.lloyd(seeds, stepsize, bnd, X, Y, False)
     stdevs2 = FindWeightedCentroids.findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y, False)
     stdevs3 = EAStepsizeControl.eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y, False)
-#    plt.clf()
-#    plt.ioff()
-#    plt.plot(range(len(stdevs)-1),stdevs[1:])
-#    plt.show()
 
     finalstd = []
     finalstd.append(stdevs1[-1])

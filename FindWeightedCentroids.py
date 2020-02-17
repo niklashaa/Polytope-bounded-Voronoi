@@ -5,7 +5,7 @@ from sys import maxsize
 import numpy as np
 
 def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y, plot):
-    aimax = 40
+    aimax = 30
     ai = aimax
     stepsize = 10
     decFactor = 0.5
