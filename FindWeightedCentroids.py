@@ -23,7 +23,8 @@ def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y, plot):
         areas = poly_areas(cells)
         stdev = np.round(np.std(areas),4)
         heights = gauss_heights(areas, heighpar)
-        phi = init_phi(X, Y, seeds, heights, sigma)
+        ucentroids = uCentroids(cells)
+        phi = init_phi(X, Y, ucentroids, heights, sigma)
         centroids = wCentroids(cells, phi, X, Y)
         sumdist = sumDist(seeds,centroids)
 
