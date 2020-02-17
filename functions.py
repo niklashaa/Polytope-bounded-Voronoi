@@ -18,6 +18,12 @@ def allInsideCell(seeds, cells):
         inside *= insideCell(seed, cell)
     return inside
 
+def sumDist(seeds, centroids):
+    dist = 0
+    for seed, centroid in zip(seeds,centroids): 
+        dist += sqrt((centroid[0]-seed[0])**2 + (centroid[1]-seed[1])**2)
+    return dist
+
 # Calculate the area of a polygon
 def poly_area(polytope):
     x = polytope[:,0]
@@ -121,12 +127,12 @@ def init_phi(X, Y, centers, heights, sigma):
     for i, center in enumerate(centers):
         gau = heights[i]*np.exp((-((Y-center[1])**2/2)-((X-center[0])**2/2))/sigma)
         phi += gau
+    phi = phi+np.abs(np.min(phi))
     return phi
 
 # Plot weighted voronoi
 def plot_voronoi(cells, seeds, centroids, X, Y, phi):
     if not plt.fignum_exists(1):
-        plt.ion()
         plt.show()
     ax = plt.axes(projection='3d')
     ax.set_xlabel('x')
@@ -142,5 +148,6 @@ def plot_voronoi(cells, seeds, centroids, X, Y, phi):
             for simplex in hull.simplices:
                 ax.plot(cell[simplex, 0],cell[simplex,1],'k-')
     ax.plot_surface(X, Y, phi, cmap='viridis', edgecolor='none', alpha=0.6)
+#    plt.show() # Use instead of draw and pause to investigate the plot
     plt.draw()
     plt.pause(0.001)

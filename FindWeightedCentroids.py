@@ -1,34 +1,53 @@
-from functions import allMoveSafeTowards, gauss_heights, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
+from functions import allMoveSafeTowards, gauss_heights, sumDist, init_phi, plot_voronoi, poly_area, poly_areas, uCentroids, wCentroids
 from voronoi import voronoi
 
 from sys import maxsize
 import numpy as np
 
 def findWeightedCentroids(seeds, stepsize, sigma, heighpar, bnd, X, Y):
+    aimax = 40
+    ai = aimax
+    stepsize = 0.9
+    decFactor = 0.5
 
     print("Start finding weighted centroids")
     stdevs = [maxsize]
+    sumdists = [maxsize]
     centroids = seeds
+    minseeds = seeds
 
     while True:
+        print(ai)
 
         seeds = allMoveSafeTowards(seeds, centroids, stepsize, bnd)
         cells = voronoi(seeds,bnd)
-        for cell in cells:
-            if cell.shape[1] != 2:
-                print(cell)
         areas = poly_areas(cells)
+        stdev = np.round(np.std(areas),4)
         heights = gauss_heights(areas, heighpar)
         phi = init_phi(X, Y, seeds, heights, sigma)
         centroids = wCentroids(cells, phi, X, Y)
+        sumdist = sumDist(seeds,centroids)
 
         # plot the result
-        # plot_voronoi(cells, seeds, centroids, X, Y, phi)
+        plot_voronoi(cells, seeds, centroids, X, Y, phi)
 
-        stdev = np.round(np.std(areas),4)
+        if sumdist >= min(sumdists):
+            ai -= 1 
+        else:
+            ai = aimax
+            minseeds = seeds
+        if ai == 0:
+            seeds = minseeds
+            centroids = minseeds
+            stdevs.append(min(stdevs))
+            sumdists.append(min(sumdists))
+            stepsize = decFactor*stepsize
+            ai = aimax
+            continue
+
         if np.array_equal(np.round(seeds,3),np.round(centroids,3)):
             break
-        if len(stdevs) > 6 and len(set(stdevs[-6:])) < 3:
-            break
+
         stdevs.append(stdev)
+        sumdists.append(sumdist)
     return stdevs[1:]

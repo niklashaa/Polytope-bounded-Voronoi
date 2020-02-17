@@ -4,27 +4,23 @@ from voronoi import voronoi
 from sys import maxsize
 import numpy as np
 
-# Introduces a mechanism of a decreasing step size 
-# on top of additional iterations to the let the 
-# algorithm converge
 def eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y):
     aimax = 10
     ai = aimax
     stepsize = 10 
     decFactor = 0.5
     minStepsize = 0.5
-    minstdev = maxsize
 
     print("Start equalizing areas with stepsize control")
     stdevs = [maxsize]
     centroids = seeds
+    minseeds = seeds
 
     while True:
 
         if stepsize < minStepsize:
             break
 
-        # iteration
         seeds = allMoveSafeTowards(seeds, centroids, stepsize, bnd)
         cells = voronoi(seeds,bnd)
         areas = poly_areas(cells)
@@ -34,18 +30,17 @@ def eaStepsizeControl(seeds, sigma, heighpar, bnd, X, Y):
         centroids = wCentroids(cells, phi, X, Y)
 
         # plot the result
-        # plot_voronoi(cells, seeds,centroids, phi)
-        
-        if stdev >= minstdev:
+#        plot_voronoi(cells, seeds, centroids, X, Y, phi)
+
+        if stdev >= min(stdevs):
             ai -= 1 
         else:
             ai = aimax
-            minSeeds = seeds
-            minstdev = stdev
+            minseeds = seeds
         if ai == 0:
-            seeds = minSeeds
-            centroids = minSeeds
-            stdevs.append(minstdev)
+            seeds = minseeds
+            centroids = minseeds
+            stdevs.append(min(stdevs))
             stepsize = decFactor*stepsize
             ai = aimax
             continue

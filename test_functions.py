@@ -7,6 +7,11 @@ class TestFunctions(unittest.TestCase):
     def setUp(self):
         self.bnd = np.array([[0, 0], [9, 0], [9, 9], [0, 9]])
         self.seeds = np.array([[1, 1],[2,1],[1,2],[3,4]])
+        self.seeds = [np.array([0.93563851, 7.85080354]),
+         np.array([0.89696547, 5.60573809]),
+         np.array([7.68339449, 4.31291054]),
+         np.array([5.67128713, 1.26333068]),
+         np.array([3.34779595, 7.91012589])]
 
         self.triangle = np.array([[0, 0],[8,0],[4,6]])
 
@@ -44,6 +49,17 @@ class TestFunctions(unittest.TestCase):
 
         phi = self.Y*phi
         centroid = np.array([4,3.290909])
+        wCentroid = np.round(functions.wCentroid(self.triangle,phi, self.X, self.Y),6)
+        np.testing.assert_equal(wCentroid, centroid)
+
+        phi = (self.Y-1000)*phi
+        centroid = np.array([4,3.288732])
+        wCentroid = np.round(functions.wCentroid(self.triangle,phi, self.X, self.Y),6)
+        np.testing.assert_equal(wCentroid, centroid)
+
+
+        phi = (self.Y-1000)*phi
+        centroid = np.array([4,3.286556])
         wCentroid = np.round(functions.wCentroid(self.triangle,phi, self.X, self.Y),6)
         np.testing.assert_equal(wCentroid, centroid)
 

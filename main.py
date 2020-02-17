@@ -9,9 +9,6 @@ import config
 import Lloyd
 import FindWeightedCentroids
 import EAStepsizeControl
-# -----------------------------------------------------------------------------------
-# Choose algorithm
-# -----------------------------------------------------------------------------------
 
 initseeds = config.seeds
 
